@@ -615,7 +615,7 @@ Every phase follows the [feature workflow](CONVENTIONS.md#3-feature-workflow): b
 | 1 | Laravel 13 + Sanctum + Boost install | — | ✅ Done |
 | 2 | Figma analysis + roadmap + documentation setup | this file | ✅ Done |
 | 3 | Project setup: MySQL, packages, remove frontend scaffolding, quality tooling, CI, API foundation (envelope, errors, versioning, locale) | `01-project-setup.md` | ✅ Done |
-| 4 | Database: migrations, models, enums, factories, realistic seeders | `02-database.md` | ⏳ |
+| 4 | Database: migrations, models, enums, factories, realistic seeders | `02-database.md` | ✅ Done |
 | 5 | Auth + roles + policies foundation + Google sign-in | `03-auth.md` | ⏳ |
 | 6 | Projects, Tasks/Kanban, comments, time logs, files | `04-projects.md`, `05-tasks.md` | ⏳ |
 | 7 | Chats + Reverb | `06-chats.md` | ⏳ |

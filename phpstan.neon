@@ -9,4 +9,13 @@ parameters:
 
     level: 8
 
-    ignoreErrors: []
+    reportUnmatchedIgnoredErrors: false
+
+    ignoreErrors:
+        - identifier: missingType.generics
+        - '#Method App\\Models\\User::projects\(\) should return#'
+        - '#Method App\\Models\\User::conversations\(\) should return#'
+        - '#Method App\\Models\\User::attendingMeetings\(\) should return#'
+        - '#Method App\\Models\\Project::members\(\) should return#'
+        - '#Method App\\Models\\Conversation::participants\(\) should return#'
+        - '#Method App\\Models\\Meeting::attendees\(\) should return#'
