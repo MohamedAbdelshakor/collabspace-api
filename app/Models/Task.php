@@ -15,9 +15,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
+/**
+ * @property TaskStatus $status
+ * @property int $position
+ * @property int $progress
+ * @property Carbon|null $completed_at
+ */
 class Task extends Model implements HasMedia
 {
     use HasFactory, HasUlid, InteractsWithMedia, SoftDeletes;

@@ -9,6 +9,8 @@ parameters:
 
     level: 8
 
+    treatPhpDocTypesAsCertain: false
+
     reportUnmatchedIgnoredErrors: false
 
     ignoreErrors:
