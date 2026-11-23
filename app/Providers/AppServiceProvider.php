@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Models\Project;
+use App\Models\Task;
 use App\Models\User;
+use App\Observers\ProjectObserver;
+use App\Observers\TaskObserver;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Cache\RateLimiting\Limit;
@@ -33,6 +37,16 @@ final class AppServiceProvider extends ServiceProvider
         $this->configurePasswordResetUrl();
         $this->configureEmailVerificationUrl();
         $this->configureRateLimiting();
+        $this->registerModelObservers();
+    }
+
+    /**
+     * Register Eloquent model observers.
+     */
+    private function registerModelObservers(): void
+    {
+        Project::observe(ProjectObserver::class);
+        Task::observe(TaskObserver::class);
     }
 
     /**

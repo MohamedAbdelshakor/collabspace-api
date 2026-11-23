@@ -617,7 +617,7 @@ Every phase follows the [feature workflow](CONVENTIONS.md#3-feature-workflow): b
 | 3 | Project setup: MySQL, packages, remove frontend scaffolding, quality tooling, CI, API foundation (envelope, errors, versioning, locale) | `01-project-setup.md` | ✅ Done |
 | 4 | Database: migrations, models, enums, factories, realistic seeders | `02-database.md` | ✅ Done |
 | 5 | Auth + roles + policies foundation + Google sign-in | `03-auth.md` | ✅ Done |
-| 6 | Projects, Tasks/Kanban, comments, time logs, files | `04-projects.md`, `05-tasks.md` | ⏳ |
+| 6 | Projects, Tasks/Kanban, comments, time logs, files | `04-projects.md`, `05-tasks.md` | ✅ Done |
 | 7 | Chats + Reverb | `06-chats.md` | ⏳ |
 | 8 | Meetings + AI pipeline | `07-meetings.md` | ⏳ |
 | 9 | Dashboard, Reports (CSV/PDF), Profile | `08-dashboard.md`, `09-reports.md`, `10-profile.md` | ⏳ |

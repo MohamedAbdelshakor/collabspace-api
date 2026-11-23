@@ -15,9 +15,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
+/**
+ * @property ProjectStatus $status
+ * @property int $progress
+ * @property Carbon|null $completed_at
+ */
 class Project extends Model implements HasMedia
 {
     use HasFactory, HasUlid, InteractsWithMedia, SoftDeletes;
