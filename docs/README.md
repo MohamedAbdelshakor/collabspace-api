@@ -11,7 +11,7 @@
 | # | Feature | Status |
 |---|---|---|
 | 01 | [Project setup & API foundation](features/01-project-setup.md) | ✅ Done |
-| 02 | Database | ⏳ |
+| 02 | [Database Architecture, Models & Seeders](features/02-database.md) | ✅ Done |
 | 03 | Auth | ⏳ |
 | 04 | Projects | ⏳ |
 | 05 | Tasks & Kanban | ⏳ |
