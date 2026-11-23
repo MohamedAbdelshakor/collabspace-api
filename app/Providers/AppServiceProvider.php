@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Models\User;
+use Illuminate\Auth\Notifications\ResetPassword;
+use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -27,7 +30,37 @@ final class AppServiceProvider extends ServiceProvider
     {
         Model::shouldBeStrict(! $this->app->isProduction());
 
+        $this->configurePasswordResetUrl();
+        $this->configureEmailVerificationUrl();
         $this->configureRateLimiting();
+    }
+
+    /**
+     * Configure URL generator for API password reset links.
+     */
+    private function configurePasswordResetUrl(): void
+    {
+        ResetPassword::createUrlUsing(function (object $notifiable, string $token): string {
+            /** @var User $notifiable */
+            $frontendUrl = (string) config('app.frontend_url', config('app.url'));
+
+            return $frontendUrl.'/reset-password?token='.$token.'&email='.urlencode($notifiable->getEmailForPasswordReset());
+        });
+    }
+
+    /**
+     * Configure URL generator for API email verification links.
+     */
+    private function configureEmailVerificationUrl(): void
+    {
+        VerifyEmail::createUrlUsing(function (object $notifiable): string {
+            /** @var User $notifiable */
+            $frontendUrl = (string) config('app.frontend_url', config('app.url'));
+            $id = (string) $notifiable->ulid;
+            $hash = sha1($notifiable->getEmailForVerification());
+
+            return $frontendUrl.'/verify-email/'.$id.'/'.$hash;
+        });
     }
 
     /**

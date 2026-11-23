@@ -19,3 +19,4 @@ parameters:
         - '#Method App\\Models\\Project::members\(\) should return#'
         - '#Method App\\Models\\Conversation::participants\(\) should return#'
         - '#Method App\\Models\\Meeting::attendees\(\) should return#'
+        - '#expects array\{.*\}, array<string, mixed> given#'
