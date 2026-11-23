@@ -10,7 +10,7 @@
 
 | # | Feature | Status |
 |---|---|---|
-| 01 | Project setup | ⏳ |
+| 01 | [Project setup & API foundation](features/01-project-setup.md) | ✅ Done |
 | 02 | Database | ⏳ |
 | 03 | Auth | ⏳ |
 | 04 | Projects | ⏳ |
