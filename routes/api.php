@@ -13,6 +13,10 @@ use App\Http\Controllers\Api\V1\Auth\ResetPasswordController;
 use App\Http\Controllers\Api\V1\Chats\ConversationController;
 use App\Http\Controllers\Api\V1\Chats\MessageController;
 use App\Http\Controllers\Api\V1\HealthController;
+use App\Http\Controllers\Api\V1\Meetings\MeetingController;
+use App\Http\Controllers\Api\V1\Meetings\MeetingNoteController;
+use App\Http\Controllers\Api\V1\Meetings\MeetingSummaryController;
+use App\Http\Controllers\Api\V1\Meetings\TranscriptController;
 use App\Http\Controllers\Api\V1\Projects\ProjectController;
 use App\Http\Controllers\Api\V1\Projects\ProjectMemberController;
 use App\Http\Controllers\Api\V1\Tasks\CommentController;
@@ -87,5 +91,17 @@ Route::prefix('v1')->as('v1.')->group(function (): void {
             ->middleware('throttle:messages')
             ->name('conversations.messages.store');
         Route::delete('messages/{message}', [MessageController::class, 'destroy'])->name('messages.destroy');
+
+        // Meetings & Calendar
+        Route::apiResource('meetings', MeetingController::class);
+        Route::post('meetings/{meeting}/rsvp', [MeetingController::class, 'rsvp'])->name('meetings.rsvp');
+        Route::post('meetings/{meeting}/recording', [MeetingController::class, 'uploadRecording'])->name('meetings.recording');
+        Route::get('meetings/{meeting}/transcripts', [TranscriptController::class, 'index'])->name('meetings.transcripts.index');
+        Route::post('meetings/{meeting}/transcripts', [TranscriptController::class, 'store'])->name('meetings.transcripts.store');
+        Route::get('meetings/{meeting}/summary', [MeetingSummaryController::class, 'show'])->name('meetings.summary.show');
+        Route::post('meetings/{meeting}/summaries/generate', [MeetingSummaryController::class, 'generate'])->name('meetings.summaries.generate');
+        Route::get('meetings/{meeting}/notes', [MeetingNoteController::class, 'index'])->name('meetings.notes.index');
+        Route::post('meetings/{meeting}/notes', [MeetingNoteController::class, 'store'])->name('meetings.notes.store');
+        Route::delete('meetings/notes/{note}', [MeetingNoteController::class, 'destroy'])->name('meetings.notes.destroy');
     });
 });
