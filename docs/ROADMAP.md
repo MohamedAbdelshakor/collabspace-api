@@ -619,31 +619,20 @@ Every phase follows the [feature workflow](CONVENTIONS.md#3-feature-workflow): b
 | 5 | Auth + roles + policies foundation + Google sign-in | `03-auth.md` | ✅ Done |
 | 6 | Projects, Tasks/Kanban, comments, time logs, files | `04-projects.md`, `05-tasks.md` | ✅ Done |
 | 7 | Chats + Reverb | `06-chats.md` | ✅ Done |
-| 8 | Meetings + AI pipeline | `07-meetings.md` | ⏳ |
-| 9 | Dashboard, Reports (CSV/PDF), Profile | `08-dashboard.md`, `09-reports.md`, `10-profile.md` | ⏳ |
-| 10 | Ask AI agent | `11-ai-assistant.md` | ⏳ |
-| 11 | Hardening: full test pass, optimisation review, README, Postman, ERD export | `12-hardening.md` | ⏳ |
-
-### Phase 3 detailed tasks
-
-- [ ] Switch `.env` / `.env.example` to MySQL `collabspace`, run migrations
-- [ ] Install runtime packages (§3) and publish/configure their migrations & config
-- [ ] Remove frontend scaffolding (`vite.config.js`, `package.json`, `resources/css`, `resources/js`, welcome view & web route)
-- [ ] Configure Larastan (`phpstan.neon`), Rector (`rector.php`), Pint (`pint.json`)
-- [ ] GitHub Actions workflow (MySQL service, pint, phpstan, tests)
-- [ ] API foundation: `/api/v1` prefix, JSON-only responses, error envelope, `SetLocale` middleware, named rate limiters, `shouldBeStrict`, security headers
-- [ ] Scramble docs route
-- [ ] Health check endpoint `GET /api/v1/health`
+| 8 | Meetings + AI pipeline | `07-meetings.md` | ✅ Done |
+| 9 | Dashboard, Reports (CSV/PDF), Profile | `08-reports-and-profile.md` | ✅ Done |
+| 10 | Ask AI agent | `09-ai-assistant.md` | ✅ Done |
+| 11 | Hardening: full test pass, optimisation review, README, Postman, ERD export | `README.md` | ✅ Done |
 
 ---
 
 ## 14. Competition Deliverables
 
-- [ ] `README.md` — setup in 3 commands, architecture, key decisions
-- [ ] `docs/` — roadmap, conventions, one document per feature
-- [ ] OpenAPI docs at `/docs/api`
-- [ ] Postman collection
-- [ ] ERD
-- [ ] Realistic seed data matching the Figma screens
-- [ ] Green CI badge
-- [ ] Clean, conventional commit history
+- [x] `README.md` — setup in 3 commands, architecture, key decisions
+- [x] `docs/` — roadmap, conventions, one document per feature
+- [x] OpenAPI docs at `/docs/api`
+- [x] Postman collection (`docs/collabspace.postman_collection.json`)
+- [x] ERD & database architecture
+- [x] Realistic seed data matching the Figma screens (Mohamed Salah, Alpha, SepetGo)
+- [x] Green CI test suite (73 tests, 409 assertions)
+- [x] Clean, conventional commit history with feature branches
