@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Api\V1\Ai\CollabspaceAiController;
 use App\Http\Controllers\Api\V1\Auth\EmailVerificationController;
 use App\Http\Controllers\Api\V1\Auth\ForgotPasswordController;
 use App\Http\Controllers\Api\V1\Auth\GoogleAuthController;
@@ -124,5 +125,16 @@ Route::prefix('v1')->as('v1.')->group(function (): void {
         Route::post('profile/avatar', [ProfileController::class, 'uploadAvatar'])->name('profile.avatar');
         Route::get('profile/tasks', [ProfileController::class, 'tasks'])->name('profile.tasks');
         Route::get('profile/files', [ProfileController::class, 'files'])->name('profile.files');
+
+        // Collabspace AI Assistant
+        Route::prefix('ai')->as('ai.')->group(function (): void {
+            Route::get('conversation', [CollabspaceAiController::class, 'conversation'])->name('conversation');
+            Route::get('messages', [CollabspaceAiController::class, 'messages'])->name('messages');
+            Route::post('messages', [CollabspaceAiController::class, 'send'])
+                ->middleware('throttle:30,1')
+                ->name('messages.send');
+            Route::post('messages/{message}/feedback', [CollabspaceAiController::class, 'feedback'])->name('messages.feedback');
+            Route::post('reset', [CollabspaceAiController::class, 'reset'])->name('reset');
+        });
     });
 });
