@@ -1,0 +1,421 @@
+{
+  "info": {
+    "name": "Collabspace API",
+    "_postman_id": "c011ab59-ace0-4c11-b1e9-9011ab59ace0",
+    "description": "Collabspace API - Enterprise Project Management, Kanban, Real-time WebSockets (Reverb), Meetings, AI Summaries & Platform Analytics",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearer_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000/api/v1",
+      "type": "string"
+    },
+    {
+      "key": "bearer_token",
+      "value": "1|sanctum_personal_access_token_here",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "01 - Health & System",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept-Language", "value": "en" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": ["{{base_url}}"],
+              "path": ["health"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "02 - Authentication",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Mohamed Salah\",\n  \"email\": \"admin@example.com\",\n  \"password\": \"Password123!\",\n  \"password_confirmation\": \"Password123!\",\n  \"remember_me\": true\n}"
+            },
+            "url": { "raw": "{{base_url}}/auth/register", "host": ["{{base_url}}"], "path": ["auth", "register"] }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"password\",\n  \"remember_me\": true\n}"
+            },
+            "url": { "raw": "{{base_url}}/auth/login", "host": ["{{base_url}}"], "path": ["auth", "login"] }
+          }
+        },
+        {
+          "name": "Current User (Me)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/auth/me", "host": ["{{base_url}}"], "path": ["auth", "me"] }
+          }
+        },
+        {
+          "name": "Forgot Password",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@example.com\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/auth/forgot-password", "host": ["{{base_url}}"], "path": ["auth", "forgot-password"] }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{base_url}}/auth/logout", "host": ["{{base_url}}"], "path": ["auth", "logout"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "03 - Projects & Kanban",
+      "item": [
+        {
+          "name": "List Visible Projects",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/projects", "host": ["{{base_url}}"], "path": ["projects"] }
+          }
+        },
+        {
+          "name": "Create Project",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"CollabSpace – Web Platform\",\n  \"description\": \"Comprehensive collaborative workspace API\",\n  \"type\": \"development\",\n  \"priority\": \"high\",\n  \"start_date\": \"2026-10-01\",\n  \"deadline\": \"2026-12-31\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/projects", "host": ["{{base_url}}"], "path": ["projects"] }
+          }
+        },
+        {
+          "name": "List Project Tasks (Kanban)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/projects/01JM7P00000000000000000001/tasks", "host": ["{{base_url}}"], "path": ["projects", "01JM7P00000000000000000001", "tasks"] }
+          }
+        },
+        {
+          "name": "Create Task",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Design System Updates\",\n  \"description\": \"Audit button contrast ratios\",\n  \"priority\": \"high\",\n  \"due_date\": \"2026-12-15\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/projects/01JM7P00000000000000000001/tasks", "host": ["{{base_url}}"], "path": ["projects", "01JM7P00000000000000000001", "tasks"] }
+          }
+        },
+        {
+          "name": "Batch Reorder Tasks",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tasks\": [\n    { \"id\": \"01JM7T00000000000000000001\", \"status\": \"in_progress\", \"position\": 1 },\n    { \"id\": \"01JM7T00000000000000000002\", \"status\": \"in_progress\", \"position\": 2 }\n  ]\n}"
+            },
+            "url": { "raw": "{{base_url}}/projects/01JM7P00000000000000000001/tasks/reorder", "host": ["{{base_url}}"], "path": ["projects", "01JM7P00000000000000000001", "tasks", "reorder"] }
+          }
+        },
+        {
+          "name": "Update Task Status",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"completed\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/tasks/01JM7T00000000000000000001/status", "host": ["{{base_url}}"], "path": ["tasks", "01JM7T00000000000000000001", "status"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "04 - Chats & Realtime",
+      "item": [
+        {
+          "name": "List Conversations",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/conversations", "host": ["{{base_url}}"], "path": ["conversations"] }
+          }
+        },
+        {
+          "name": "Start Direct Conversation",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"recipient_id\": \"01JM7U00000000000000000002\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/conversations/direct", "host": ["{{base_url}}"], "path": ["conversations", "direct"] }
+          }
+        },
+        {
+          "name": "Send Message",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"body\": \"Check the design updates at https://github.com/MohamedAbdelshakor/collabspace-api\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/conversations/01JM7C00000000000000000001/messages", "host": ["{{base_url}}"], "path": ["conversations", "01JM7C00000000000000000001", "messages"] }
+          }
+        },
+        {
+          "name": "Start Instant Meeting",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{base_url}}/conversations/01JM7C00000000000000000001/instant-meeting", "host": ["{{base_url}}"], "path": ["conversations", "01JM7C00000000000000000001", "instant-meeting"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "05 - Meetings & AI Pipeline",
+      "item": [
+        {
+          "name": "List Meetings (Calendar Filter)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/meetings?start_date=2026-11-01&end_date=2026-11-30",
+              "host": ["{{base_url}}"],
+              "path": ["meetings"],
+              "query": [
+                { "key": "start_date", "value": "2026-11-01" },
+                { "key": "end_date", "value": "2026-11-30" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Schedule Meeting",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Sprint Retrospective\",\n  \"description\": \"Reviewing sprint velocity and accomplishments\",\n  \"starts_at\": \"2026-11-26T10:00:00Z\",\n  \"ends_at\": \"2026-11-26T11:00:00Z\",\n  \"meeting_url\": \"https://meet.google.com/xyz-retrospective\",\n  \"attendee_ids\": [\"01JM7U00000000000000000002\"]\n}"
+            },
+            "url": { "raw": "{{base_url}}/meetings", "host": ["{{base_url}}"], "path": ["meetings"] }
+          }
+        },
+        {
+          "name": "RSVP Meeting",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"response\": \"accepted\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/meetings/01JM7M00000000000000000001/rsvp", "host": ["{{base_url}}"], "path": ["meetings", "01JM7M00000000000000000001", "rsvp"] }
+          }
+        },
+        {
+          "name": "List Transcripts",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/meetings/01JM7M00000000000000000001/transcripts?search=homepage", "host": ["{{base_url}}"], "path": ["meetings", "01JM7M00000000000000000001", "transcripts"] }
+          }
+        },
+        {
+          "name": "Generate AI Summary",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"language\": \"en\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/meetings/01JM7M00000000000000000001/summaries/generate", "host": ["{{base_url}}"], "path": ["meetings", "01JM7M00000000000000000001", "summaries", "generate"] }
+          }
+        },
+        {
+          "name": "Get Latest Summary",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/meetings/01JM7M00000000000000000001/summary", "host": ["{{base_url}}"], "path": ["meetings", "01JM7M00000000000000000001", "summary"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "06 - Dashboard & Reports (CSV/PDF)",
+      "item": [
+        {
+          "name": "Dashboard Stats",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/dashboard/stats", "host": ["{{base_url}}"], "path": ["dashboard", "stats"] }
+          }
+        },
+        {
+          "name": "Reports Metrics (Charts Series)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/reports/metrics", "host": ["{{base_url}}"], "path": ["reports", "metrics"] }
+          }
+        },
+        {
+          "name": "Generate Detailed Report",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"tasks_summary\",\n  \"note\": \"Quarterly deliverables analysis\",\n  \"start_date\": \"2026-10-01\",\n  \"end_date\": \"2026-11-24\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/reports", "host": ["{{base_url}}"], "path": ["reports"] }
+          }
+        },
+        {
+          "name": "Export Report CSV",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/reports/01JM7R00000000000000000001/export/csv", "host": ["{{base_url}}"], "path": ["reports", "01JM7R00000000000000000001", "export", "csv"] }
+          }
+        },
+        {
+          "name": "Export Report PDF (DomPDF)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/reports/01JM7R00000000000000000001/export/pdf", "host": ["{{base_url}}"], "path": ["reports", "01JM7R00000000000000000001", "export", "pdf"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "07 - User Profile",
+      "item": [
+        {
+          "name": "Get Profile (Overview)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/profile", "host": ["{{base_url}}"], "path": ["profile"] }
+          }
+        },
+        {
+          "name": "Update Profile (Phone Validation)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Mohamed Salah\",\n  \"phone_country\": \"EG\",\n  \"phone_number\": \"+201234569878\",\n  \"job_title\": \"Senior UI/UX Designer\",\n  \"years_of_experience\": 6,\n  \"availability_status\": \"available\",\n  \"bio\": \"Experienced UI/UX Designer with over 5 years of expertise in creating user-centered digital experiences.\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/profile", "host": ["{{base_url}}"], "path": ["profile"] }
+          }
+        },
+        {
+          "name": "Profile Tasks Tab",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/profile/tasks", "host": ["{{base_url}}"], "path": ["profile", "tasks"] }
+          }
+        },
+        {
+          "name": "Profile Files Tab",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/profile/files", "host": ["{{base_url}}"], "path": ["profile", "files"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "08 - Collabspace AI Assistant",
+      "item": [
+        {
+          "name": "Get AI Conversation",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/ai/conversation", "host": ["{{base_url}}"], "path": ["ai", "conversation"] }
+          }
+        },
+        {
+          "name": "Send Message to AI",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"What are my pending tasks for this week? Check https://www.externallink.com\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/ai/messages", "host": ["{{base_url}}"], "path": ["ai", "messages"] }
+          }
+        },
+        {
+          "name": "Submit AI Feedback",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rating\": \"up\",\n  \"comment\": \"Very accurate and helpful answer!\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/ai/messages/01JM7M00000000000000000001/feedback", "host": ["{{base_url}}"], "path": ["ai", "messages", "01JM7M00000000000000000001", "feedback"] }
+          }
+        },
+        {
+          "name": "Reset AI Conversation",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{base_url}}/ai/reset", "host": ["{{base_url}}"], "path": ["ai", "reset"] }
+          }
+        }
+      ]
+    }
+  ]
+}
