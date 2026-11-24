@@ -618,7 +618,7 @@ Every phase follows the [feature workflow](CONVENTIONS.md#3-feature-workflow): b
 | 4 | Database: migrations, models, enums, factories, realistic seeders | `02-database.md` | ✅ Done |
 | 5 | Auth + roles + policies foundation + Google sign-in | `03-auth.md` | ✅ Done |
 | 6 | Projects, Tasks/Kanban, comments, time logs, files | `04-projects.md`, `05-tasks.md` | ✅ Done |
-| 7 | Chats + Reverb | `06-chats.md` | ⏳ |
+| 7 | Chats + Reverb | `06-chats.md` | ✅ Done |
 | 8 | Meetings + AI pipeline | `07-meetings.md` | ⏳ |
 | 9 | Dashboard, Reports (CSV/PDF), Profile | `08-dashboard.md`, `09-reports.md`, `10-profile.md` | ⏳ |
 | 10 | Ask AI agent | `11-ai-assistant.md` | ⏳ |
