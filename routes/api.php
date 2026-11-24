@@ -12,13 +12,16 @@ use App\Http\Controllers\Api\V1\Auth\RegisterController;
 use App\Http\Controllers\Api\V1\Auth\ResetPasswordController;
 use App\Http\Controllers\Api\V1\Chats\ConversationController;
 use App\Http\Controllers\Api\V1\Chats\MessageController;
+use App\Http\Controllers\Api\V1\Dashboard\DashboardController;
 use App\Http\Controllers\Api\V1\HealthController;
 use App\Http\Controllers\Api\V1\Meetings\MeetingController;
 use App\Http\Controllers\Api\V1\Meetings\MeetingNoteController;
 use App\Http\Controllers\Api\V1\Meetings\MeetingSummaryController;
 use App\Http\Controllers\Api\V1\Meetings\TranscriptController;
+use App\Http\Controllers\Api\V1\Profile\ProfileController;
 use App\Http\Controllers\Api\V1\Projects\ProjectController;
 use App\Http\Controllers\Api\V1\Projects\ProjectMemberController;
+use App\Http\Controllers\Api\V1\Reports\ReportController;
 use App\Http\Controllers\Api\V1\Tasks\CommentController;
 use App\Http\Controllers\Api\V1\Tasks\TaskController;
 use App\Http\Controllers\Api\V1\Tasks\TaskReorderController;
@@ -103,5 +106,23 @@ Route::prefix('v1')->as('v1.')->group(function (): void {
         Route::get('meetings/{meeting}/notes', [MeetingNoteController::class, 'index'])->name('meetings.notes.index');
         Route::post('meetings/{meeting}/notes', [MeetingNoteController::class, 'store'])->name('meetings.notes.store');
         Route::delete('meetings/notes/{note}', [MeetingNoteController::class, 'destroy'])->name('meetings.notes.destroy');
+
+        // Dashboard
+        Route::get('dashboard/stats', [DashboardController::class, 'stats'])->name('dashboard.stats');
+
+        // Reports
+        Route::get('reports/metrics', [ReportController::class, 'metrics'])->name('reports.metrics');
+        Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
+        Route::post('reports', [ReportController::class, 'store'])->name('reports.store');
+        Route::get('reports/{report}', [ReportController::class, 'show'])->name('reports.show');
+        Route::get('reports/{report}/export/csv', [ReportController::class, 'exportCsv'])->name('reports.export.csv');
+        Route::get('reports/{report}/export/pdf', [ReportController::class, 'exportPdf'])->name('reports.export.pdf');
+
+        // User Profile
+        Route::get('profile', [ProfileController::class, 'show'])->name('profile.show');
+        Route::patch('profile', [ProfileController::class, 'update'])->name('profile.update');
+        Route::post('profile/avatar', [ProfileController::class, 'uploadAvatar'])->name('profile.avatar');
+        Route::get('profile/tasks', [ProfileController::class, 'tasks'])->name('profile.tasks');
+        Route::get('profile/files', [ProfileController::class, 'files'])->name('profile.files');
     });
 });
