@@ -10,6 +10,8 @@ use App\Http\Controllers\Api\V1\Auth\LogoutController;
 use App\Http\Controllers\Api\V1\Auth\MeController;
 use App\Http\Controllers\Api\V1\Auth\RegisterController;
 use App\Http\Controllers\Api\V1\Auth\ResetPasswordController;
+use App\Http\Controllers\Api\V1\Chats\ConversationController;
+use App\Http\Controllers\Api\V1\Chats\MessageController;
 use App\Http\Controllers\Api\V1\HealthController;
 use App\Http\Controllers\Api\V1\Projects\ProjectController;
 use App\Http\Controllers\Api\V1\Projects\ProjectMemberController;
@@ -71,5 +73,19 @@ Route::prefix('v1')->as('v1.')->group(function (): void {
         Route::get('tasks/{task}/comments', [CommentController::class, 'index'])->name('tasks.comments.index');
         Route::post('tasks/{task}/comments', [CommentController::class, 'store'])->name('tasks.comments.store');
         Route::delete('comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
+
+        // Chats & Conversations
+        Route::get('conversations', [ConversationController::class, 'index'])->name('conversations.index');
+        Route::post('conversations/direct', [ConversationController::class, 'direct'])->name('conversations.direct');
+        Route::get('conversations/{conversation}', [ConversationController::class, 'show'])->name('conversations.show');
+        Route::post('conversations/{conversation}/read', [ConversationController::class, 'read'])->name('conversations.read');
+        Route::post('conversations/{conversation}/instant-meeting', [ConversationController::class, 'instantMeeting'])->name('conversations.instant-meeting');
+
+        // Messages
+        Route::get('conversations/{conversation}/messages', [MessageController::class, 'index'])->name('conversations.messages.index');
+        Route::post('conversations/{conversation}/messages', [MessageController::class, 'store'])
+            ->middleware('throttle:messages')
+            ->name('conversations.messages.store');
+        Route::delete('messages/{message}', [MessageController::class, 'destroy'])->name('messages.destroy');
     });
 });
