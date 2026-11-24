@@ -110,6 +110,16 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     }
 
     /**
+     * Alias for assignedTasks.
+     *
+     * @return BelongsToMany<Task, $this>
+     */
+    public function tasks(): BelongsToMany
+    {
+        return $this->assignedTasks();
+    }
+
+    /**
      * @return HasMany<Task, $this>
      */
     public function createdTasks(): HasMany

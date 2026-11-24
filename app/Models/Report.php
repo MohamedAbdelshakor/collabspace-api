@@ -10,7 +10,20 @@ use App\Models\Concerns\HasUlid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
+/**
+ * @property ReportType $type
+ * @property ReportStatus $status
+ * @property Carbon|null $start_date
+ * @property Carbon|null $end_date
+ * @property array<string, mixed>|null $data
+ * @property string|null $ai_summary
+ * @property string|null $csv_path
+ * @property string|null $pdf_path
+ * @property string|null $note
+ * @property string|null $failed_reason
+ */
 class Report extends Model
 {
     use HasFactory, HasUlid;
