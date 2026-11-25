@@ -19,8 +19,7 @@ final class CreateInstantMeetingAction
         return DB::transaction(function () use ($conversation, $creator, $title): Meeting {
             $meetingTitle = $title ?? ('Instant Meeting - '.($conversation->name ?? 'Chat'));
             $roomCode = Str::random(12);
-            $appUrl = (string) config('app.frontend_url', config('app.url'));
-            $meetingUrl = "{$appUrl}/meet/{$roomCode}";
+            $meetingUrl = "https://meet.jit.si/collabspace-{$roomCode}";
 
             /** @var Meeting $meeting */
             $meeting = Meeting::create([

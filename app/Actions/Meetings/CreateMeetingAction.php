@@ -39,8 +39,7 @@ final class CreateMeetingAction
             $meetingUrl = $data['meeting_url'] ?? null;
             if (empty($meetingUrl)) {
                 $code = Str::random(12);
-                $baseUrl = (string) config('app.frontend_url', config('app.url'));
-                $meetingUrl = "{$baseUrl}/meet/{$code}";
+                $meetingUrl = "https://meet.jit.si/collabspace-{$code}";
             }
 
             /** @var Meeting $meeting */
