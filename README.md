@@ -1,8 +1,10 @@
 # Collabspace API 🚀
 
-[![CI Test Suite](https://img.shields.io/badge/PHPUnit-73%20Passed%20(409%20assertions)-brightgreen.svg)](tests/)
+[![CI Test Suite](https://img.shields.io/badge/PHPUnit-74%20Passed%20(411%20assertions)-brightgreen.svg)](tests/)
 [![Static Analysis](https://img.shields.io/badge/Larastan-Level%208%20Clean-blue.svg)](phpstan.neon)
 [![Code Style](https://img.shields.io/badge/Laravel%20Pint-Strict%20PSR--12-success.svg)](vendor/bin/pint)
+[![OpenAPI Docs](https://img.shields.io/badge/API%20Docs-OpenAPI%203.1%20(Scramble)-85EA2D.svg)](docs/openapi.json)
+[![Postman Collection](https://img.shields.io/badge/Postman-71%20Endpoints%20%7C%2077%20Examples-FF6C37.svg)](docs/collabspace.postman_collection.json)
 [![Framework](https://img.shields.io/badge/Laravel-13%20(PHP%208.4)-red.svg)](https://laravel.com)
 [![License](https://img.shields.io/badge/License-MIT-black.svg)](LICENSE)
 
@@ -146,8 +148,14 @@ vendor/bin/phpstan analyse --no-progress
 
 ## 📖 API Documentation & Postman
 
-- **Interactive API Documentation (Scramble):** `http://localhost:8000/docs/api`
-- **Postman Collection:** Download and import [`docs/collabspace.postman_collection.json`](docs/collabspace.postman_collection.json) to test all endpoints out-of-the-box.
+| Resource | Link |
+|---|---|
+| **Interactive API Docs (Scramble UI)** | [`http://localhost:8000/docs/api`](http://localhost:8000/docs/api) *(when running `php artisan serve`)* |
+| **OpenAPI 3.1 JSON Spec (GitHub)** | [`docs/openapi.json`](https://github.com/MohamedAbdelshakor/collabspace-api/blob/main/docs/openapi.json) |
+| **Postman Collection (71 Endpoints · 77 Examples)** | [`docs/collabspace.postman_collection.json`](https://github.com/MohamedAbdelshakor/collabspace-api/blob/main/docs/collabspace.postman_collection.json) |
+| **Direct Postman Import URL (Raw)** | `https://raw.githubusercontent.com/MohamedAbdelshakor/collabspace-api/main/docs/collabspace.postman_collection.json` |
+| **Architecture & Roadmap** | [`docs/ROADMAP.md`](https://github.com/MohamedAbdelshakor/collabspace-api/blob/main/docs/ROADMAP.md) |
+
 - **Default Seeded Credentials:**
   - **Email:** `admin@example.com`
   - **Password:** `password`
