@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Ai\Agents\CollabspaceAgent;
 use App\Enums\AvailabilityStatus;
 use App\Enums\MeetingStatus;
 use App\Enums\ReportStatus;
@@ -17,6 +18,7 @@ use App\Models\TimeLog;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 final class ReportGeneratorService
@@ -218,6 +220,28 @@ final class ReportGeneratorService
         $dateRange = ($report->start_date && $report->end_date)
             ? "between {$startFormatted} and {$endFormatted}"
             : 'across the current quarter';
+
+        if (! app()->runningUnitTests() && filled(config('ai.providers.gemini.key'))) {
+            try {
+                $sampleJson = json_encode(array_slice($items, 0, 15), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+                $noteContext = $report->note ? "User note: {$report->note}\n" : '';
+                $agent = new CollabspaceAgent(
+                    customInstructions: 'You are an executive business analyst for Collabspace. Write a concise 3-4 sentence executive summary (plain text, no markdown bullets) highlighting key findings and one actionable recommendation.'
+                );
+
+                $aiSummary = trim((string) $agent->prompt(
+                    "Generate an executive summary for {$typeLabel} ({$dateRange}) with {$count} total records.\n{$noteContext}Sample data:\n{$sampleJson}"
+                ));
+
+                if ($aiSummary !== '') {
+                    return $aiSummary;
+                }
+            } catch (\Throwable $e) {
+                Log::warning('Gemini report summary failed, falling back to local summary.', [
+                    'error' => $e->getMessage(),
+                ]);
+            }
+        }
 
         return "Executive Analysis for {$typeLabel} ({$dateRange}): Analyzed {$count} records. Overall team velocity remains optimal with high adherence to delivery schedules. Bottlenecks were mitigated through proactive reviewer assignments and cross-functional syncs. Recommended next steps: maintain task breakdown granularity and continue regular retrospectives.";
     }

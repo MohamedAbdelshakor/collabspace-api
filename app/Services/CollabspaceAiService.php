@@ -4,13 +4,18 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Ai\Agents\CollabspaceAgent;
 use App\Models\AgentConversation;
 use App\Models\AgentMessage;
 use App\Models\Meeting;
 use App\Models\Project;
 use App\Models\Task;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Laravel\Ai\Messages\AssistantMessage;
+use Laravel\Ai\Messages\Message;
+use Laravel\Ai\Messages\UserMessage;
 
 final class CollabspaceAiService
 {
@@ -52,7 +57,7 @@ final class CollabspaceAiService
     }
 
     /**
-     * Send message and generate assistant response.
+     * Send message and generate assistant response via Gemini (Laravel AI SDK).
      *
      * @return array{user_message: AgentMessage, assistant_message: AgentMessage}
      */
@@ -61,6 +66,9 @@ final class CollabspaceAiService
         $conversation = $conversationId
             ? AgentConversation::where('id', $conversationId)->first() ?? $this->getOrCreateConversation($user)
             : $this->getOrCreateConversation($user);
+
+        // Load recent history before storing the new user message
+        $history = $this->buildHistory($conversation);
 
         // Check for link preview
         $linkPreview = $this->extractLinkPreview($prompt);
@@ -81,8 +89,8 @@ final class CollabspaceAiService
             'status' => 'completed',
         ]);
 
-        // 2. Generate Intelligent Domain Response
-        $responseContent = $this->generateResponse($user, $prompt);
+        // 2. Generate Live AI Response via Gemini (with safe fallback)
+        $responseContent = $this->generateResponse($user, $prompt, $history);
 
         // 3. Save Assistant Message
         /** @var AgentMessage $assistantMessage */
@@ -167,14 +175,99 @@ final class CollabspaceAiService
         return null;
     }
 
-    private function generateResponse(User $user, string $prompt): string
+    /**
+     * @return list<Message>
+     */
+    private function buildHistory(AgentConversation $conversation): array
+    {
+        $recent = $conversation->messages()
+            ->latest('created_at')
+            ->limit(10)
+            ->get()
+            ->reverse();
+
+        $messages = [];
+        foreach ($recent as $msg) {
+            $content = (string) $msg->content;
+            if ($content === '') {
+                continue;
+            }
+
+            $messages[] = $msg->role === 'assistant'
+                ? new AssistantMessage($content)
+                : new UserMessage($content);
+        }
+
+        return $messages;
+    }
+
+    private function buildSystemInstructions(User $user): string
+    {
+        $tasks = $user->tasks()->limit(8)->get();
+        $taskLines = $tasks->isNotEmpty()
+            ? $tasks->map(fn (Task $t): string => "- {$t->title} (status: {$t->status->value}, progress: {$t->progress}%)")->implode("\n")
+            : 'No assigned tasks yet.';
+
+        $projects = Project::limit(5)->get();
+        $projectLines = $projects->isNotEmpty()
+            ? $projects->map(fn (Project $p): string => "- {$p->name} (status: {$p->status->value}, progress: {$p->progress}%)")->implode("\n")
+            : 'No projects yet.';
+
+        $meetings = Meeting::where('starts_at', '>=', now()->startOfDay())->limit(5)->get();
+        $meetingLines = $meetings->isNotEmpty()
+            ? $meetings->map(function (Meeting $m): string {
+                $time = $m->starts_at instanceof \DateTimeInterface ? $m->starts_at->format('Y-m-d H:i') : (string) ($m->starts_at ?? 'TBD');
+                $status = $m->status instanceof \BackedEnum ? $m->status->value : (string) $m->status;
+
+                return "- {$m->title} (starts: {$time}, status: {$status})";
+            })->implode("\n")
+            : 'No upcoming meetings.';
+
+        return implode("\n", [
+            'You are Collabspace AI (CB), an intelligent project management assistant.',
+            "Current User: {$user->name} ({$user->job_title}).",
+            'Reply concisely and helpfully in the same language the user uses (Arabic or English).',
+            'Workspace Context:',
+            "User's Tasks:\n{$taskLines}",
+            "Projects:\n{$projectLines}",
+            "Upcoming Meetings:\n{$meetingLines}",
+        ]);
+    }
+
+    /**
+     * @param  list<Message>  $history
+     */
+    private function generateResponse(User $user, string $prompt, array $history): string
+    {
+        if (! app()->runningUnitTests() && filled(config('ai.providers.gemini.key'))) {
+            try {
+                $agent = new CollabspaceAgent(
+                    customInstructions: $this->buildSystemInstructions($user),
+                    history: $history,
+                );
+
+                $response = trim((string) $agent->prompt($prompt));
+                if ($response !== '') {
+                    return $response;
+                }
+            } catch (\Throwable $e) {
+                Log::warning('Gemini AI chat request failed, falling back to local response.', [
+                    'error' => $e->getMessage(),
+                ]);
+            }
+        }
+
+        return $this->fallbackResponse($user, $prompt);
+    }
+
+    private function fallbackResponse(User $user, string $prompt): string
     {
         $lower = strtolower($prompt);
 
         if (str_contains($lower, 'task') || str_contains($lower, 'todo')) {
             $tasks = $user->tasks()->limit(4)->get();
             if ($tasks->isNotEmpty()) {
-                $taskList = $tasks->map(fn (Task $t) => "- **{$t->title}** ({$t->status->value} - {$t->progress}%)")->implode("\n");
+                $taskList = $tasks->map(fn (Task $t): string => "- **{$t->title}** ({$t->status->value} - {$t->progress}%)")->implode("\n");
 
                 return "Here is a snapshot of your tasks:\n{$taskList}\n\nWould you like me to create a new task or update a progress status?";
             }
@@ -184,7 +277,7 @@ final class CollabspaceAiService
 
         if (str_contains($lower, 'project') || str_contains($lower, 'alpha') || str_contains($lower, 'sepetgo')) {
             $projects = Project::limit(3)->get();
-            $projList = $projects->map(fn (Project $p) => "- **{$p->name}** ({$p->status->value}, {$p->progress}% completed)")->implode("\n");
+            $projList = $projects->map(fn (Project $p): string => "- **{$p->name}** ({$p->status->value}, {$p->progress}% completed)")->implode("\n");
 
             return "Project Status Overview:\n{$projList}\n\nBoth projects are progressing on track according to the milestone timeline.";
         }

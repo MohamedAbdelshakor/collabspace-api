@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'default' => 'openai',
+    'default' => env('AI_DEFAULT_PROVIDER', 'gemini'),
     'default_for_images' => 'gemini',
     'default_for_audio' => 'openai',
     'default_for_transcription' => 'openai',
@@ -106,6 +106,13 @@ return [
             'driver' => 'gemini',
             'key' => env('GEMINI_API_KEY'),
             'url' => env('GEMINI_URL', 'https://generativelanguage.googleapis.com/v1beta/'),
+            'models' => [
+                'text' => [
+                    'default' => env('GEMINI_MODEL', 'gemini-3-flash-preview'),
+                    'cheapest' => env('GEMINI_CHEAPEST_MODEL', 'gemini-3.1-flash-lite-preview'),
+                    'smartest' => env('GEMINI_SMARTEST_MODEL', 'gemini-3-flash-preview'),
+                ],
+            ],
         ],
 
         'groq' => [
