@@ -13,6 +13,7 @@ use App\Models\Conversation;
 use App\Models\Message;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Queue;
 use Laravel\Sanctum\Sanctum;
@@ -248,5 +249,38 @@ final class ChatTest extends TestCase
 
         $this->postJson("/api/v1/conversations/{$conversation->ulid}/messages", ['body' => 'Intruder'])
             ->assertForbidden();
+    }
+
+    public function test_participant_can_authenticate_reverb_private_channel_and_stranger_cannot(): void
+    {
+        config([
+            'broadcasting.default' => 'reverb',
+            'broadcasting.connections.reverb.key' => 'test-reverb-key',
+            'broadcasting.connections.reverb.secret' => 'test-reverb-secret',
+            'broadcasting.connections.reverb.app_id' => '123456',
+        ]);
+        Broadcast::purge('reverb');
+        require base_path('routes/channels.php');
+
+        $userA = User::factory()->create();
+        $stranger = User::factory()->create();
+
+        $conversation = Conversation::factory()->create();
+        $conversation->participants()->attach([$userA->id]);
+
+        // Participant succeeds and receives signed Reverb auth token
+        Sanctum::actingAs($userA);
+        $this->postJson('/api/v1/broadcasting/auth', [
+            'socket_id' => '123456.789012',
+            'channel_name' => "private-conversations.{$conversation->ulid}",
+        ])->assertOk()
+            ->assertJsonStructure(['auth']);
+
+        // Stranger is forbidden
+        Sanctum::actingAs($stranger);
+        $this->postJson('/api/v1/broadcasting/auth', [
+            'socket_id' => '123456.789012',
+            'channel_name' => "private-conversations.{$conversation->ulid}",
+        ])->assertForbidden();
     }
 }

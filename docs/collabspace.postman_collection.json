@@ -100,6 +100,21 @@
             "key": "reviewer_id",
             "value": "01JM7USR000000000000000002",
             "type": "string"
+        },
+        {
+            "key": "reverb_app_key",
+            "value": "vassxghmb8fgrx8dyq4s",
+            "type": "string"
+        },
+        {
+            "key": "socket_id",
+            "value": "123456.789012",
+            "type": "string"
+        },
+        {
+            "key": "reverb_auth",
+            "value": "",
+            "type": "string"
         }
     ],
     "item": [
@@ -4050,6 +4065,174 @@
                             ],
                             "cookie": [],
                             "body": "{\n    \"message\": \"Message deleted successfully.\"\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Reverb Private Channel Auth (For WebSocket)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "{{locale}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/broadcasting/auth",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "broadcasting",
+                                "auth"
+                            ]
+                        },
+                        "description": "Authenticates a Sanctum user to subscribe to a private Reverb WebSocket channel (`private-conversations.{ulid}` or `private-users.{ulid}`).\n\n### How to test live WebSocket in Postman:\n1. Open **New → WebSocket** tab and connect to: `ws://localhost:8080/app/{{reverb_app_key}}?protocol=7&client=js&version=8.4.0&flash=false`\n2. Copy the `socket_id` returned in `pusher:connection_established` into the `socket_id` variable.\n3. Run this request — it auto-saves the signature into `{{reverb_auth}}`.\n4. In the WebSocket tab, send:\n```json\n{\"event\":\"pusher:subscribe\",\"data\":{\"auth\":\"{{reverb_auth}}\",\"channel\":\"private-conversations.{{conversation_id}}\"}}\n```\n5. Send any chat message via `Send Message` and watch `message.sent` arrive live!",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"socket_id\": \"{{socket_id}}\",\n    \"channel_name\": \"private-conversations.{{conversation_id}}\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "200 OK — Channel Authorized",
+                            "originalRequest": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Accept-Language",
+                                        "value": "{{locale}}"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/broadcasting/auth",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "broadcasting",
+                                        "auth"
+                                    ]
+                                },
+                                "description": "Authenticates a Sanctum user to subscribe to a private Reverb WebSocket channel (`private-conversations.{ulid}` or `private-users.{ulid}`).\n\n### How to test live WebSocket in Postman:\n1. Open **New → WebSocket** tab and connect to: `ws://localhost:8080/app/{{reverb_app_key}}?protocol=7&client=js&version=8.4.0&flash=false`\n2. Copy the `socket_id` returned in `pusher:connection_established` into the `socket_id` variable.\n3. Run this request — it auto-saves the signature into `{{reverb_auth}}`.\n4. In the WebSocket tab, send:\n```json\n{\"event\":\"pusher:subscribe\",\"data\":{\"auth\":\"{{reverb_auth}}\",\"channel\":\"private-conversations.{{conversation_id}}\"}}\n```\n5. Send any chat message via `Send Message` and watch `message.sent` arrive live!",
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"socket_id\": \"{{socket_id}}\",\n    \"channel_name\": \"private-conversations.{{conversation_id}}\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                },
+                                {
+                                    "key": "Cache-Control",
+                                    "value": "no-cache, private"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"auth\": \"vassxghmb8fgrx8dyq4s:8f9c2a1b4e5d6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a\"\n}"
+                        },
+                        {
+                            "name": "403 Forbidden — Not a Participant",
+                            "originalRequest": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Accept-Language",
+                                        "value": "{{locale}}"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/broadcasting/auth",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "broadcasting",
+                                        "auth"
+                                    ]
+                                },
+                                "description": "Authenticates a Sanctum user to subscribe to a private Reverb WebSocket channel (`private-conversations.{ulid}` or `private-users.{ulid}`).\n\n### How to test live WebSocket in Postman:\n1. Open **New → WebSocket** tab and connect to: `ws://localhost:8080/app/{{reverb_app_key}}?protocol=7&client=js&version=8.4.0&flash=false`\n2. Copy the `socket_id` returned in `pusher:connection_established` into the `socket_id` variable.\n3. Run this request — it auto-saves the signature into `{{reverb_auth}}`.\n4. In the WebSocket tab, send:\n```json\n{\"event\":\"pusher:subscribe\",\"data\":{\"auth\":\"{{reverb_auth}}\",\"channel\":\"private-conversations.{{conversation_id}}\"}}\n```\n5. Send any chat message via `Send Message` and watch `message.sent` arrive live!",
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"socket_id\": \"{{socket_id}}\",\n    \"channel_name\": \"private-conversations.{{conversation_id}}\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            },
+                            "status": "Forbidden",
+                            "code": 403,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                },
+                                {
+                                    "key": "Cache-Control",
+                                    "value": "no-cache, private"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"message\": \"This action is unauthorized.\",\n    \"code\": \"FORBIDDEN\"\n}"
+                        }
+                    ],
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "if (pm.response.code === 200) {",
+                                    "    const json = pm.response.json();",
+                                    "    if (json.auth) {",
+                                    "        pm.collectionVariables.set(\"reverb_auth\", json.auth);",
+                                    "    }",
+                                    "}"
+                                ]
+                            }
                         }
                     ]
                 }
